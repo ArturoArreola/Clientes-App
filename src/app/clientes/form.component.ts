@@ -12,6 +12,7 @@ export class FormComponent implements OnInit {
 
   private cliente:Cliente = new Cliente();
   private titulo:string= "Crear cliente";
+  private errores:string[];
 
   constructor(private clienteService:ClienteService,
   private router:Router,
@@ -34,21 +35,29 @@ export class FormComponent implements OnInit {
     console.log("Llegando al componente");
     console.log(this.cliente);
     this.clienteService.create(this.cliente)
-    .subscribe( cliente =>{
+    .subscribe(cliente =>{
       this.router.navigate(['/clientes'])
-      swal('Guardado',`Se ha guardado a ${cliente.nombre} ${cliente.apellido} con éxito`, 'success')
+      swal('Guardado',`Se ha guardado a ${this.cliente.nombre} ${this.cliente.apellido} con éxito`, 'success')
+    },
+    err => {
+      this.errores = err.error.errors as string[];
+      console.error('Código de error: ' + err.status);
+      console.error(err.error.errors);
     }
     );
   }
 
   update():void{
-    this.clienteService.update(this.cliente).subscribe(
-      cliente =>{
+    this.clienteService.update(this.cliente)
+    .subscribe(json =>{
         this.router.navigate(['/clientes'])
-        swal('Éxito',`Se ha actualizado a ${cliente.nombre} ${cliente.apellido} con éxito`, 'success')
+        swal('Éxito',`Se ha actualizado a ${this.cliente.nombre} ${this.cliente.apellido} con éxito`, 'success')
+      },
+      err => {
+        this.errores = err.error.errors as string[];
+        console.error('Código de error: ' + err.status);
+        console.error(err.error.errors);
       }
-
     )
   }
-
 }
