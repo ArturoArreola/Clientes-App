@@ -5,7 +5,7 @@ import { CLIENTES } from './clientes.json';
 import { Observable, throwError } from  'rxjs';
 import { of } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { map, catchError} from 'rxjs/operators';
+import { map, catchError, tap} from 'rxjs/operators';
 import swal from 'sweetalert2';
 import { Router } from '@angular/router';
 
@@ -18,16 +18,24 @@ export class ClienteService {
   constructor(private http: HttpClient, private router: Router) { }
 
   // Buscar todos los clientes
-  getClientes():Observable<Cliente[]>{
-    return this.http.get<Cliente[]>(this.urlEndPoint).pipe(
-      map (response => {
-        let clientes = response as Cliente [];
-        return clientes.map(cliente => {
+  getClientes(page: number):Observable<any>{
+    return this.http.get<Cliente[]>(this.urlEndPoint + '/page/' + page).pipe(
+      tap((response:any)=>{
+        console.log('ClienteService: tap: 1');
+        (response.content as Cliente[]).forEach(cliente =>{
+          console.log(cliente.nombre);
+        });
+
+      }),
+      map ((response:any) => {
+        //let clientes = response as Cliente [];
+        (response.content as Cliente[]).map(cliente => {
           cliente.nombre = cliente.nombre.toUpperCase();
-          let datePipe = new DatePipe('es');
+          //let datePipe = new DatePipe('es');
           //cliente.createAt = datePipe.transform(cliente.createAt, 'EEEE dd, MMMM yyyy');
           return cliente;
-        })
+        });
+        return response;
       })
     );
   }

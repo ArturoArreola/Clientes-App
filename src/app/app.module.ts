@@ -13,6 +13,9 @@ import { FormComponent } from './clientes/form.component';
 import { FormsModule } from '@angular/forms';
 import localeES from '@angular/common/locales/es-MX';
 import {registerLocaleData} from '@angular/common';
+import { PaginatorComponent } from './paginator/paginator.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatDatepickerModule, MatNativeDateModule } from '@angular/material';
 
 registerLocaleData(localeES, 'es');
 
@@ -20,6 +23,7 @@ const routes: Routes = [
   {path: '', redirectTo: '/clientes', pathMatch: 'full'},
   {path: 'directivas', component: DirectivaComponent},
   {path: 'clientes', component: ClientesComponent},
+  {path: 'clientes/page/:page', component: ClientesComponent},
   {path: 'clientes/form', component: FormComponent},
   {path: 'clientes/form/:id', component: FormComponent}
 ];
@@ -31,13 +35,17 @@ const routes: Routes = [
     FooterComponent,
     DirectivaComponent,
     ClientesComponent,
-    FormComponent
+    FormComponent,
+    PaginatorComponent
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
     FormsModule,
-    RouterModule.forRoot(routes)
+    RouterModule.forRoot(routes),
+    BrowserAnimationsModule,
+    MatDatepickerModule,
+    MatNativeDateModule
   ],
   providers: [ClienteService, {provide: LOCALE_ID, useValue: 'es'}],
   bootstrap: [AppComponent]
