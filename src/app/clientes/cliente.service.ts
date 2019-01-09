@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { formatDate, DatePipe} from '@angular/common';
 import { Cliente } from './cliente';
+import { Region } from './region';
 //import { CLIENTES } from './clientes.json';
 import { Observable, throwError } from  'rxjs';
 import { of } from 'rxjs';
@@ -16,6 +17,10 @@ export class ClienteService {
   private httpHeaders = new HttpHeaders({'Content-Type': 'application/json'})
 
   constructor(private http: HttpClient, private router: Router) { }
+
+  getRegiones(): Observable<Region[]>{
+    return this.http.get<Region[]>(this.urlEndPoint + '/regiones');
+  }
 
   // Buscar todos los clientes
   getClientes(page: number):Observable<any>{

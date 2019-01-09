@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Cliente } from './cliente';
+import { Region } from './region';
 import { ClienteService } from './cliente.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import swal from 'sweetalert2';
+
 
 @Component({
   selector: 'app-form',
@@ -13,6 +15,7 @@ export class FormComponent implements OnInit {
   private cliente:Cliente = new Cliente();
   private titulo:string= "Crear cliente";
   private errores:string[];
+  regiones: Region [];
 
   constructor(private clienteService:ClienteService,
   private router:Router,
@@ -20,6 +23,8 @@ export class FormComponent implements OnInit {
 
   ngOnInit() {
     this.cargarCliente();
+
+    this.clienteService.getRegiones().subscribe((regiones) => this.regiones = regiones);
   }
 
   cargarCliente():void{
@@ -28,7 +33,8 @@ export class FormComponent implements OnInit {
       if(id){
         this.clienteService.getCliente(id).subscribe((cliente)=> this.cliente = cliente)
       }
-    })
+    });
+
   }
 
   create():void{
@@ -59,5 +65,12 @@ export class FormComponent implements OnInit {
         console.error(err.error.errors);
       }
     )
+  }
+
+  compararRegion(region1: Region, region2: Region):boolean{
+    if(region1 === undefined && region2 === undefined){
+      return true;
+    }
+    return region1 === null || region2 === null || region1 === undefined || region2 === undefined? false: region1.id === region2.id;
   }
 }
